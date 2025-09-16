@@ -58,7 +58,7 @@ uv pip install -e .
 
 4. 配置环境变量：
 
-复制`.env.example`文件（如果存在）或创建新的`.env`文件，并设置您的API密钥：
+复制`.env文件（如果存在）或创建新的`.env`文件，并设置您的API密钥：
 
 ```
 # 模型类型: openai, deepseek, ollama
