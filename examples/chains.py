@@ -5,18 +5,22 @@ LangChain链示例
 """
 
 import os
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
 from langchain_core.pydantic_v1 import BaseModel, Field
-from typing import List
 
 # 导入模型工具
 from .models import get_chat_model
 
-def simple_chain_example():
-    """简单链示例"""
+def simple_chain_example(model_kwargs: Optional[Dict[str, Any]] = None):
+    """
+    简单链示例
+    
+    Args:
+        model_kwargs: 可选的模型参数，包括model_type和model_name
+    """
     print("\n=== 简单链示例 ===")
 
     # 创建提示模板
@@ -25,7 +29,7 @@ def simple_chain_example():
     )
     
     # 创建模型
-    model = get_chat_model()
+    model = get_chat_model(model_kwargs)
     
     # 创建输出解析器
     output_parser = StrOutputParser()
@@ -41,12 +45,17 @@ def simple_chain_example():
     print(result)
     print()
 
-def sequential_chain_example():
-    """顺序链示例"""
+def sequential_chain_example(model_kwargs: Optional[Dict[str, Any]] = None):
+    """
+    顺序链示例
+    
+    Args:
+        model_kwargs: 可选的模型参数，包括model_type和model_name
+    """
     print("\n=== 顺序链示例 ===")
 
     # 创建模型
-    model = get_chat_model()
+    model = get_chat_model(model_kwargs)
     
     # 第一个链：生成故事主题
     topic_prompt = ChatPromptTemplate.from_template(
@@ -73,8 +82,13 @@ def sequential_chain_example():
     print(f"生成的故事:\n{story_result}")
     print()
 
-def json_output_chain_example():
-    """JSON输出链示例"""
+def json_output_chain_example(model_kwargs: Optional[Dict[str, Any]] = None):
+    """
+    JSON输出链示例
+    
+    Args:
+        model_kwargs: 可选的模型参数，包括model_type和model_name
+    """
     print("\n=== JSON输出链示例 ===")
 
     # 定义输出模式
@@ -102,7 +116,7 @@ def json_output_chain_example():
     )
     
     # 创建模型
-    model = get_chat_model()
+    model = get_chat_model(model_kwargs)
     
     # 创建JSON输出解析器
     output_parser = JsonOutputParser(pydantic_object=MovieRecommendation)
@@ -139,6 +153,6 @@ def json_output_chain_example():
 
 if __name__ == "__main__":
     # 如果直接运行此文件，使用默认模型
-    # simple_chain_example()
-    # sequential_chain_example()
+    simple_chain_example()
+    sequential_chain_example()
     json_output_chain_example()

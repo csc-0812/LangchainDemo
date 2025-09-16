@@ -20,8 +20,13 @@ from langchain_core.messages import AIMessage, HumanMessage
 # 导入模型工具
 from .models import get_chat_model
 
-def basic_agent_example():
-    """基本代理示例"""
+def basic_agent_example(model_kwargs: Optional[Dict[str, Any]] = None):
+    """
+    基本代理示例
+    
+    Args:
+        model_kwargs: 可选的模型参数，包括model_type和model_name
+    """
     print("\n=== 基本代理示例 ===")
 
     # 定义工具函数
@@ -70,7 +75,7 @@ def basic_agent_example():
     ])
     
     # 创建模型
-    llm = get_chat_model()
+    llm = get_chat_model(model_kwargs)
     
     # 创建代理
     agent = create_openai_tools_agent(llm, tools, prompt)
@@ -104,8 +109,13 @@ def basic_agent_example():
         chat_history.append(HumanMessage(content=question))
         chat_history.append(AIMessage(content=response["output"]))
 
-def retrieval_agent_example():
-    """检索增强代理示例"""
+def retrieval_agent_example(model_kwargs: Optional[Dict[str, Any]] = None):
+    """
+    检索增强代理示例
+    
+    Args:
+        model_kwargs: 可选的模型参数，包括model_type和model_name
+    """
     print("\n=== 检索增强代理示例 ===")
 
     # 创建一些示例文档
@@ -159,7 +169,7 @@ def retrieval_agent_example():
     ])
     
     # 创建模型
-    llm = get_chat_model()
+    llm = get_chat_model(model_kwargs)
     
     # 创建代理
     agent = create_openai_tools_agent(llm, tools, prompt)

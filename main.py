@@ -2,6 +2,7 @@
 LangChain演示项目主程序
 
 这个程序是LangChain演示项目的入口点，允许用户选择运行不同的示例和模型。
+支持OpenAI、DeepSeek和本地Ollama模型，并提供交互式菜单和命令行参数。
 """
 
 import os
@@ -10,12 +11,12 @@ import argparse
 from dotenv import load_dotenv
 from examples.models import get_model_info, ModelType
 
-# 全局变量
-SELECTED_MODEL_TYPE: ModelType = "openai"  # 默认使用OpenAI
-SELECTED_MODEL_NAME = None  # 默认使用模型类型的默认模型
-
 # 加载环境变量
 load_dotenv()
+
+# 全局变量
+SELECTED_MODEL_TYPE: ModelType = os.getenv("MODEL_TYPE", "ollama")  # 默认使用Ollama
+SELECTED_MODEL_NAME = os.getenv("MODEL_NAME")  # 默认使用模型类型的默认模型
 
 def check_model_availability():
     """检查所选模型是否可用"""
@@ -23,9 +24,9 @@ def check_model_availability():
     
     if not model_info[SELECTED_MODEL_TYPE]["available"]:
         if SELECTED_MODEL_TYPE == "openai":
-            print(f"错误: OpenAI模型不可用。请在.env文件中设置有效的OPENAI_API_KEY。")
+            print(f"错误: OpenAI模型不可用。请在.env文件中设置有效的API_KEY。")
         elif SELECTED_MODEL_TYPE == "deepseek":
-            print(f"错误: DeepSeek模型不可用。请在.env文件中设置有效的DEEPSEEK_API_KEY。")
+            print(f"错误: DeepSeek模型不可用。请在.env文件中设置有效的API_KEY和API_BASE。")
         elif SELECTED_MODEL_TYPE == "ollama":
             print(f"错误: Ollama模型不可用。请确保Ollama服务正在运行(http://localhost:11434)。")
         return False
@@ -138,43 +139,42 @@ def select_specific_model(model_type: ModelType):
 
 def run_example(choice):
     """运行选择的示例"""
-    # 导入模型模块
-    from examples.models import get_chat_model
-    
-    # 创建模型实例
+    # 创建模型参数
     model_kwargs = {
         "model_type": SELECTED_MODEL_TYPE,
         "model_name": SELECTED_MODEL_NAME
     }
     
-    if choice == "1":
-        print("\n运行聊天模型示例...")
-        # 修改chat_models模块以接受模型参数
-        from examples import chat_models
-        # 将模型参数传递给示例函数
-        chat_models.basic_chat_example(model_kwargs=model_kwargs)
-        chat_models.chat_with_system_message(model_kwargs=model_kwargs)
-        chat_models.chat_with_prompt_template(model_kwargs=model_kwargs)
-    elif choice == "2":
-        print("\n运行链示例...")
-        from examples import chains
-        chains.simple_chain_example(model_kwargs=model_kwargs)
-        chains.sequential_chain_example(model_kwargs=model_kwargs)
-        chains.json_output_chain_example(model_kwargs=model_kwargs)
-    elif choice == "3":
-        print("\n运行记忆示例...")
-        from examples import memory
-        memory.conversation_buffer_memory_example(model_kwargs=model_kwargs)
-        memory.conversation_summary_memory_example(model_kwargs=model_kwargs)
-    elif choice == "4":
-        print("\n运行代理示例...")
-        from examples import agents
-        agents.basic_agent_example(model_kwargs=model_kwargs)
-        agents.retrieval_agent_example(model_kwargs=model_kwargs)
-    elif choice == "5":
-        select_model()
-    else:
-        print("无效的选择，请重试。")
+    try:
+        if choice == "1":
+            print("\n运行聊天模型示例...")
+            from examples import chat_models
+            chat_models.basic_chat_example()
+            chat_models.chat_with_system_message()
+            chat_models.chat_with_prompt_template()
+        elif choice == "2":
+            print("\n运行链示例...")
+            from examples import chains
+            chains.simple_chain_example()
+            chains.sequential_chain_example()
+            chains.json_output_chain_example()
+        elif choice == "3":
+            print("\n运行记忆示例...")
+            from examples import memory
+            memory.conversation_buffer_memory_example()
+            memory.conversation_summary_memory_example()
+        elif choice == "4":
+            print("\n运行代理示例...")
+            from examples import agents
+            agents.basic_agent_example()
+            agents.retrieval_agent_example()
+        elif choice == "5":
+            select_model()
+        else:
+            print("无效的选择，请重试。")
+    except Exception as e:
+        print(f"运行示例时出错: {str(e)}")
+        print("请检查模型配置和网络连接。")
 
 def parse_arguments():
     """解析命令行参数"""

@@ -14,12 +14,17 @@ from langchain_core.prompts import ChatPromptTemplate
 # 导入模型工具
 from .models import get_chat_model
 
-def basic_chat_example():
-    """基本聊天模型示例"""
+def basic_chat_example(model_kwargs: Optional[Dict[str, Any]] = None):
+    """
+    基本聊天模型示例
+    
+    Args:
+        model_kwargs: 可选的模型参数，包括model_type和model_name
+    """
     print("\n=== 基本聊天模型示例 ===")
     
     # 初始化聊天模型
-    chat = get_chat_model()
+    chat = get_chat_model(model_kwargs)
 
     # 发送单个消息
     message = HumanMessage(content="用简单的术语解释量子计算")
@@ -29,12 +34,17 @@ def basic_chat_example():
     print(f"回答: {response.content}")
     print()
 
-def chat_with_system_message():
-    """使用系统消息的聊天示例"""
+def chat_with_system_message(model_kwargs: Optional[Dict[str, Any]] = None):
+    """
+    使用系统消息的聊天示例
+    
+    Args:
+        model_kwargs: 可选的模型参数，包括model_type和model_name
+    """
     print("\n=== 使用系统消息的聊天示例 ===")
     
     # 初始化聊天模型
-    chat = get_chat_model()
+    chat = get_chat_model(model_kwargs)
 
     # 创建消息列表，包括系统消息
     messages = [
@@ -50,8 +60,13 @@ def chat_with_system_message():
     print(f"回答: {response.content}")
     print()
 
-def chat_with_prompt_template():
-    """使用提示模板的聊天示例"""
+def chat_with_prompt_template(model_kwargs: Optional[Dict[str, Any]] = None):
+    """
+    使用提示模板的聊天示例
+    
+    Args:
+        model_kwargs: 可选的模型参数，包括model_type和model_name
+    """
     print("\n=== 使用提示模板的聊天示例 ===")
 
     # 创建聊天提示模板
@@ -61,7 +76,7 @@ def chat_with_prompt_template():
     ])
     
     # 初始化聊天模型
-    chat = get_chat_model()
+    chat = get_chat_model(model_kwargs)
     
     # 创建链
     chain = prompt | chat

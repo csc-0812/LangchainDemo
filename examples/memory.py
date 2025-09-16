@@ -15,8 +15,13 @@ from langchain_core.messages import HumanMessage, AIMessage
 # 导入模型工具
 from .models import get_chat_model
 
-def conversation_buffer_memory_example():
-    """对话缓冲记忆示例"""
+def conversation_buffer_memory_example(model_kwargs: Optional[Dict[str, Any]] = None):
+    """
+    对话缓冲记忆示例
+    
+    Args:
+        model_kwargs: 可选的模型参数，包括model_type和model_name
+    """
     print("\n=== 对话缓冲记忆示例 ===")
 
     # 创建记忆组件
@@ -30,7 +35,7 @@ def conversation_buffer_memory_example():
     ])
     
     # 创建模型
-    model = get_chat_model()
+    model = get_chat_model(model_kwargs)
     
     # 创建对话链
     conversation = ConversationChain(
@@ -62,12 +67,17 @@ def conversation_buffer_memory_example():
         print(f"{role}: {message.content}")
     print()
 
-def conversation_summary_memory_example():
-    """对话摘要记忆示例"""
+def conversation_summary_memory_example(model_kwargs: Optional[Dict[str, Any]] = None):
+    """
+    对话摘要记忆示例
+    
+    Args:
+        model_kwargs: 可选的模型参数，包括model_type和model_name
+    """
     print("\n=== 对话摘要记忆示例 ===")
 
     # 创建模型
-    model = get_chat_model()
+    model = get_chat_model(model_kwargs)
     
     # 创建记忆组件 - 使用相同的模型进行摘要
     memory = ConversationSummaryMemory(
@@ -115,7 +125,6 @@ def conversation_summary_memory_example():
     
     # 显示摘要记忆
     print("记忆中的对话摘要:")
-    # print(memory.buffer)
     print("Memory对象:", memory)
     print("Memory属性列表:")
     for attr in dir(memory):
